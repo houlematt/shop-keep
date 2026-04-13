@@ -1,0 +1,33 @@
+.app {
+  max-width: 40rem;
+  margin: 0 auto;
+  padding: 2rem 1.5rem;
+}
+
+.lede {
+  color: #475569;
+  margin-bottom: 2rem;
+}
+
+.panel {
+  border: 1px solid #e2e8f0;
+  border-radius: 0.5rem;
+  padding: 1.25rem 1.5rem;
+  background: #f8fafc;
+}
+
+.panel h2 {
+  margin-top: 0;
+  font-size: 1rem;
+}
+
+.panel pre {
+  margin: 0;
+  font-size: 0.875rem;
+  overflow-x: auto;
+}
+
+.error {
+  color: #b91c1c;
+  margin: 0;
+}
