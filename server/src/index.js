@@ -1,20 +1,22 @@
 'use strict';
 
-const Fs = require('fs');
 const Path = require('path');
+
+require('dotenv').config({ path: Path.resolve(__dirname, '../../.env') });
+
 const Hapi = require('@hapi/hapi');
 const Inert = require('@hapi/inert');
 
+const database = require('./lib/database');
+const { registerAll } = require('./routes');
+
 const staticRoot = Path.resolve(__dirname, '../../client/dist');
 
-function isPathInsideRoot(root, candidate) {
-  const relative = Path.relative(root, candidate);
-  return relative === '' || (!relative.startsWith('..') && !Path.isAbsolute(relative));
-}
-
 async function createServer() {
+  await database.connect();
+
   const server = Hapi.server({
-    port: Number(process.env.PORT) || 3900,
+    port: Number(process.env.PORT) || 3000,
     host: process.env.HOST || '0.0.0.0',
     routes: {
       files: {
@@ -30,43 +32,9 @@ async function createServer() {
   });
 
   await server.register(Inert);
+  registerAll(server, { staticRoot });
 
-  server.route({
-    method: 'GET',
-    path: '/api/health',
-    handler: () => ({ ok: true, service: 'shop-keep' })
-  });
-
-  const distExists = Fs.existsSync(staticRoot);
-
-  if (distExists) {
-    server.route({
-      method: 'GET',
-      path: '/{path*}',
-      handler: (request, h) => {
-        const segments = request.params.path || '';
-        const candidate = Path.resolve(staticRoot, segments);
-
-        if (!isPathInsideRoot(staticRoot, candidate)) {
-          return h.file('index.html');
-        }
-
-        if (segments && Fs.existsSync(candidate) && Fs.statSync(candidate).isFile()) {
-          return h.file(Path.relative(staticRoot, candidate));
-        }
-
-        return h.file('index.html');
-      }
-    });
-  } else if (process.env.NODE_ENV === 'production') {
-    server.route({
-      method: 'GET',
-      path: '/{any*}',
-      handler: () => ({
-        message: 'Client build not found. Run `npm run build` from the repo root.'
-      })
-    });
-  }
+  server.app.mysql = database.pool;
 
   return server;
 }
@@ -75,9 +43,20 @@ async function main() {
   const server = await createServer();
   await server.start();
   console.log(`Server running at ${server.info.uri}`);
+
+  const stop = async (signal) => {
+    console.log(`received ${signal}, shutting down`);
+    await server.stop({ timeout: 10_000 });
+    await database.shutdown().catch(() => {});
+    process.exit(0);
+  };
+
+  process.once('SIGINT', () => stop('SIGINT'));
+  process.once('SIGTERM', () => stop('SIGTERM'));
 }
 
-main().catch((err) => {
+main().catch(async (err) => {
   console.error(err);
+  await database.shutdown().catch(() => {});
   process.exit(1);
 });
