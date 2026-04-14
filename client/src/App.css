@@ -32,6 +32,23 @@
   margin: 0;
 }
 
+.error-block .error {
+  margin-bottom: 0.5rem;
+}
+
+.error-detail {
+  margin: 0;
+  padding: 0.75rem;
+  font-size: 0.8125rem;
+  line-height: 1.4;
+  color: #7f1d1d;
+  background: #fef2f2;
+  border-radius: 0.375rem;
+  overflow-x: auto;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
 .muted {
   color: #64748b;
   margin: 0;

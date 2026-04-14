@@ -9,7 +9,12 @@ function formatWhen(value) {
 
 export default function App() {
   const [health, setHealth] = useState(null);
-  const [usersState, setUsersState] = useState({ loading: true, users: [], error: null });
+  const [usersState, setUsersState] = useState({
+    loading: true,
+    users: [],
+    error: null,
+    message: null
+  });
 
   useEffect(() => {
     let cancelled = false;
@@ -30,22 +35,41 @@ export default function App() {
     let cancelled = false;
     fetch('/api/users')
       .then(async (r) => {
-        const data = await r.json().catch(() => ({}));
-        if (!r.ok) throw new Error(data.error || r.statusText);
-        return data;
-      })
-      .then((data) => {
+        const text = await r.text();
+        let data = {};
+        try {
+          data = text ? JSON.parse(text) : {};
+        } catch {
+          data = { message: `Non-JSON response (${r.status}): ${text.slice(0, 120)}` };
+        }
+        if (!r.ok) {
+          if (!cancelled) {
+            setUsersState({
+              loading: false,
+              users: [],
+              error: true,
+              message: data.message || data.error || `${r.status} ${r.statusText}`
+            });
+          }
+          return;
+        }
         if (!cancelled) {
           setUsersState({
             loading: false,
             users: Array.isArray(data.users) ? data.users : [],
-            error: null
+            error: null,
+            message: null
           });
         }
       })
-      .catch(() => {
+      .catch((e) => {
         if (!cancelled) {
-          setUsersState({ loading: false, users: [], error: true });
+          setUsersState({
+            loading: false,
+            users: [],
+            error: true,
+            message: e instanceof Error ? e.message : 'Network error'
+          });
         }
       });
     return () => {
@@ -72,7 +96,12 @@ export default function App() {
         <h2>Users (up to 5)</h2>
         {usersState.loading && <p>Loading users…</p>}
         {usersState.error && (
-          <p className="error">Could not load users. Check the database and /api/users.</p>
+          <div className="error-block">
+            <p className="error">Could not load users.</p>
+            {usersState.message && (
+              <pre className="error-detail">{usersState.message}</pre>
+            )}
+          </div>
         )}
         {!usersState.loading && !usersState.error && usersState.users.length === 0 && (
           <p className="muted">No users in the database yet.</p>

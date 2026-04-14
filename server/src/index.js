@@ -12,6 +12,25 @@ const { registerAll } = require('./routes');
 
 const staticRoot = Path.resolve(__dirname, '../../client/dist');
 
+function attachLogging(server) {
+  const logEachRequest =
+    process.env.NODE_ENV !== 'production' || process.env.LOG_REQUESTS === 'true';
+
+  server.events.on('response', (request) => {
+    if (!logEachRequest) return;
+    const res = request.response;
+    const status = res && typeof res.statusCode === 'number' ? res.statusCode : 0;
+    const ms = request.info.responded - request.info.received;
+    console.log(`${request.method.toUpperCase()} ${request.path} ${status} ${ms}ms`);
+  });
+
+  server.events.on('log', (event, tags) => {
+    if (tags.error) {
+      console.error('[hapi:error]', event.error || event.data);
+    }
+  });
+}
+
 async function createServer() {
   await database.connect();
 
@@ -31,10 +50,12 @@ async function createServer() {
     }
   });
 
+  server.app.mysql = database.pool;
+
   await server.register(Inert);
   registerAll(server, { staticRoot });
 
-  server.app.mysql = database.pool;
+  attachLogging(server);
 
   return server;
 }
@@ -42,7 +63,8 @@ async function createServer() {
 async function main() {
   const server = await createServer();
   await server.start();
-  console.log(`Server running at ${server.info.uri}`);
+  const env = process.env.NODE_ENV || 'development';
+  console.log(`Server running at ${server.info.uri} (NODE_ENV=${env})`);
 
   const stop = async (signal) => {
     console.log(`received ${signal}, shutting down`);

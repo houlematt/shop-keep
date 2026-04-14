@@ -8,12 +8,23 @@ function register(server) {
     path: '/api/users',
     handler: async (request, h) => {
       const pool = request.server.app.mysql;
+      if (!pool) {
+        return h
+          .response({ error: 'database_unavailable', message: 'MySQL pool is not attached to the server' })
+          .code(503);
+      }
       try {
         const users = await userService.listUsersPreview(pool);
         return h.response({ users }).type('application/json');
       } catch (err) {
         request.server.log(['error', 'users'], err);
-        return h.response({ error: 'failed_to_load_users' }).code(500);
+        const message = err.sqlMessage || err.message || String(err);
+        return h
+          .response({
+            error: 'failed_to_load_users',
+            message
+          })
+          .code(500);
       }
     }
   });
