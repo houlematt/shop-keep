@@ -121,8 +121,8 @@ export default function App() {
               </thead>
               <tbody>
                 {usersState.users.map((u) => (
-                  <tr key={String(u.id)}>
-                    <td>{String(u.id)}</td>
+                  <tr key={String(u.user_id)}>
+                    <td>{String(u.user_id)}</td>
                     <td>{u.email}</td>
                     <td>{[u.first_name, u.last_name].filter(Boolean).join(' ') || '—'}</td>
                     <td>{u.role}</td>

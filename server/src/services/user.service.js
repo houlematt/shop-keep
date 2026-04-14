@@ -3,7 +3,7 @@
 const { User } = require('../models');
 
 function toJsonSafeUser(row) {
-  const id = row.id;
+  const id = row.user_id;
   return {
     ...row,
     id: typeof id === 'bigint' ? id.toString() : id != null ? String(id) : id

@@ -10,7 +10,7 @@ const ROLES = Object.freeze(['admin', 'user']);
 
 /**
  * @typedef {Object} UserRow
- * @property {string} id
+ * @property {string} user_id
  * @property {string} email
  * @property {string} password_hash
  * @property {string} first_name
@@ -65,7 +65,7 @@ async function findByEmail(pool, email) {
  * @returns {Promise<{ insertId: string }>}
  */
 const PUBLIC_LIST_COLUMNS = [
-  'id',
+  'user_id',
   'email',
   'first_name',
   'last_name',
@@ -83,7 +83,7 @@ const LIST_LIMIT = 5;
  */
 async function listRecent(pool) {
   const [rows] = await pool.query(
-    `SELECT ${PUBLIC_LIST_COLUMNS} FROM \`${TABLE}\` ORDER BY id ASC LIMIT ?`,
+    `SELECT ${PUBLIC_LIST_COLUMNS} FROM \`${TABLE}\` ORDER BY user_id ASC LIMIT ?`,
     [LIST_LIMIT]
   );
   return rows;
