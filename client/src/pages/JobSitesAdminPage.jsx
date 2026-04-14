@@ -1,5 +1,4 @@
 import { useCallback, useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
 import '../App.css';
 
 const LIST_URL = '/api/job-sites?limit=500';
@@ -204,13 +203,8 @@ export default function JobSitesAdminPage() {
 
   return (
     <main className="app admin-page">
-      <header className="app-nav admin-top-nav">
-        <Link to="/" className="nav-link">
-          ← Home
-        </Link>
-      </header>
       <h1>Job sites</h1>
-      <p className="lede">Create and manage job sites. No sign-in required.</p>
+      <p className="lede">Create and manage job sites.</p>
 
       {error && (
         <div className="error-block admin-flash">

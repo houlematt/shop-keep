@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { authHeaders, clearToken, getToken } from '../auth/storage.js';
 import '../App.css';
 
@@ -28,6 +28,7 @@ async function parseJsonResponse(r) {
 
 export default function UserAdminPage() {
   const navigate = useNavigate();
+  const location = useLocation();
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -41,14 +42,8 @@ export default function UserAdminPage() {
 
   const redirectToLogin = useCallback(() => {
     clearToken();
-    navigate('/login', { replace: true, state: { from: '/user' } });
-  }, [navigate]);
-
-  useEffect(() => {
-    if (!getToken()) {
-      redirectToLogin();
-    }
-  }, [redirectToLogin]);
+    navigate('/login', { replace: true, state: { from: location.pathname } });
+  }, [navigate, location.pathname]);
 
   const loadUsers = useCallback(async () => {
     if (!getToken()) return;
@@ -116,11 +111,6 @@ export default function UserAdminPage() {
       is_active: !!u.is_active
     });
     setMessage(null);
-  }
-
-  function logout() {
-    clearToken();
-    navigate('/login', { replace: true, state: { from: '/user' } });
   }
 
   async function handleSubmit(e) {
@@ -217,20 +207,8 @@ export default function UserAdminPage() {
     }
   }
 
-  if (!getToken()) {
-    return null;
-  }
-
   return (
     <main className="app admin-page">
-      <header className="app-nav admin-top-nav">
-        <Link to="/" className="nav-link">
-          ← Home
-        </Link>
-        <button type="button" className="btn small linkish" onClick={logout}>
-          Sign out
-        </button>
-      </header>
       <h1>User administration</h1>
       <p className="lede">Create, edit, and delete users (ADMIN only, up to 200 listed).</p>
 

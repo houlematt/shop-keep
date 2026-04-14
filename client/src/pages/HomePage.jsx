@@ -12,10 +12,6 @@ export default function HomePage() {
           </li>
           <li>
             <Link to="/user">Users</Link>
-            <span className="home-hint"> (ADMIN sign-in)</span>
-          </li>
-          <li>
-            <Link to="/login">Sign in</Link>
           </li>
         </ul>
       </nav>

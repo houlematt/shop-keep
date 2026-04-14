@@ -1,6 +1,6 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
-import { setToken } from '../auth/storage.js';
+import { getToken, setToken, setUserProfile } from '../auth/storage.js';
 import '../App.css';
 
 async function parseJsonResponse(r) {
@@ -20,7 +20,17 @@ export default function LoginPage() {
   const [submitting, setSubmitting] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
-  const from = location.state?.from || '/user';
+  const rawFrom = location.state?.from;
+  const from =
+    typeof rawFrom === 'string' && rawFrom.startsWith('/') && !rawFrom.startsWith('//')
+      ? rawFrom
+      : '/';
+
+  useEffect(() => {
+    if (getToken()) {
+      navigate(from, { replace: true });
+    }
+  }, [navigate, from]);
 
   async function handleSubmit(e) {
     e.preventDefault();
@@ -42,6 +52,7 @@ export default function LoginPage() {
         return;
       }
       setToken(data.token);
+      setUserProfile(data.user ?? null);
       navigate(from, { replace: true });
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Network error');
@@ -58,7 +69,7 @@ export default function LoginPage() {
         </Link>
       </header>
       <h1 className="home-title">Sign in</h1>
-      <p className="lede">Administrator access is required to manage users.</p>
+      <p className="lede">Sign in to use the app.</p>
 
       {error && (
         <div className="error-block admin-flash">
