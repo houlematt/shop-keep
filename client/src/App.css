@@ -4,6 +4,53 @@
   padding: 2rem 1.5rem;
 }
 
+.home .home-title {
+  margin: 0 0 1.5rem;
+  font-size: 1.75rem;
+  font-weight: 600;
+}
+
+.home-links ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.home-links li {
+  margin: 0.35rem 0;
+}
+
+.home-links a {
+  color: #2563eb;
+  text-decoration: none;
+  font-size: 1rem;
+}
+
+.home-links a:hover {
+  text-decoration: underline;
+}
+
+.home-hint {
+  font-size: 0.8125rem;
+  color: #64748b;
+}
+
+.admin-top-nav {
+  justify-content: space-between;
+  align-items: center;
+}
+
+.btn.linkish {
+  border: none;
+  background: none;
+  color: #2563eb;
+  padding: 0.25rem 0;
+}
+
+.btn.linkish:hover:not(:disabled) {
+  text-decoration: underline;
+}
+
 .lede {
   color: #475569;
   margin-bottom: 2rem;
@@ -90,4 +137,169 @@
 
 .users-table .nowrap {
   white-space: nowrap;
+}
+
+.app-nav {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 1rem;
+}
+
+.nav-link {
+  font-size: 0.875rem;
+  color: #2563eb;
+  text-decoration: none;
+}
+
+.nav-link:hover {
+  text-decoration: underline;
+}
+
+.admin-page .admin-flash {
+  margin-bottom: 1rem;
+}
+
+.admin-page .success {
+  margin: 0 0 1rem;
+  padding: 0.75rem 1rem;
+  background: #ecfdf5;
+  color: #065f46;
+  border-radius: 0.375rem;
+  font-size: 0.875rem;
+}
+
+.admin-form-panel {
+  margin-bottom: 1.25rem;
+}
+
+.create-form-collapsed {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.5rem;
+}
+
+.create-form-hint {
+  margin: 0;
+  font-size: 0.875rem;
+}
+
+.form-panel-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.form-panel-heading h2 {
+  margin: 0;
+  font-size: 1rem;
+}
+
+.admin-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  max-width: 28rem;
+}
+
+.job-site-form {
+  max-width: 36rem;
+}
+
+.textarea-field {
+  padding: 0.5rem 0.65rem;
+  border: 1px solid #cbd5e1;
+  border-radius: 0.375rem;
+  font-size: 0.9375rem;
+  font-family: inherit;
+  resize: vertical;
+}
+
+.admin-form .field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.admin-form .field span {
+  font-size: 0.8125rem;
+  font-weight: 500;
+  color: #334155;
+}
+
+.admin-form .field input,
+.admin-form .field select {
+  padding: 0.5rem 0.65rem;
+  border: 1px solid #cbd5e1;
+  border-radius: 0.375rem;
+  font-size: 0.9375rem;
+}
+
+.admin-form .field.checkbox {
+  flex-direction: row;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.admin-form .field-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.75rem;
+}
+
+@media (max-width: 520px) {
+  .admin-form .field-row {
+    grid-template-columns: 1fr;
+  }
+}
+
+.form-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: 0.25rem;
+}
+
+.btn {
+  padding: 0.5rem 1rem;
+  border-radius: 0.375rem;
+  border: 1px solid #cbd5e1;
+  background: #fff;
+  font-size: 0.875rem;
+  cursor: pointer;
+  color: #0f172a;
+}
+
+.btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.btn.primary {
+  background: #2563eb;
+  border-color: #2563eb;
+  color: #fff;
+}
+
+.btn.small {
+  padding: 0.35rem 0.65rem;
+  font-size: 0.8125rem;
+}
+
+.btn.danger {
+  border-color: #fecaca;
+  color: #b91c1c;
+  background: #fef2f2;
+}
+
+.admin-table .actions-col {
+  width: 9rem;
+}
+
+.admin-table .actions-cell {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
 }

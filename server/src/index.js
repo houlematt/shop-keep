@@ -45,7 +45,8 @@ async function createServer() {
         ? false
         : {
             origin: ['http://localhost:5173'],
-            additionalHeaders: ['cache-control']
+            additionalHeaders: ['cache-control', 'authorization'],
+            exposedHeaders: ['authorization']
           }
     }
   });
